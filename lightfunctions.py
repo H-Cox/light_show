@@ -8,9 +8,9 @@ def rbrightness():
 	return np.random.randint(0,256)
 
 # select a random light
-def rlight():
+def rlight(number_lights):
 
-	return np.random.randint(1,5)
+	return np.random.randint(1,number_lights+1)
 
 # select a random colour
 def rcolour():
@@ -35,22 +35,21 @@ def goodcolour():
 
 # turn all the lights on
 def allon(b):
-
-	for i in range(4):
+	for i in range(len(b.lights())):
 
 		b.lights(i+1,'state',on=True)
 
 # turn all the lights off
 def alloff(b):
 
-	for i in range(4):
+	for i in range(len(b.lights())):
 
 		b.lights(i+1,'state',on=False)
 
 # set all lights to saturation 255
 def maxsat(b):
-
-	for i in range(4):
+	
+	for i in range(len(b.lights())):
 
 		b.lights(i+1, 'state', sat = 255)
 
@@ -351,7 +350,7 @@ def colouralternate(b,duration,wait):
 			time.sleep(wait)
 
 # alternate lights with varying wait times and sweeps between
-def colouraltsweep(b,maxwait,minwait,altd,runs):
+def colouraltsweep(b,maxwait,minwait,altd,runs,light_order):
 	# inputs are b, max and minimum waiting time for alternation,
 	# alternation durations, and number of downwards/upward runs
 	print("Starting colour-alt-sweep...")
@@ -382,12 +381,12 @@ def colouraltsweep(b,maxwait,minwait,altd,runs):
 
 		# turn on lights with a sweep and wait
 		if t < int(len(order)/2):
-			sweeponc(b,[3,0,1,2],1)
+			sweeponc(b,light_order,1)
 		else:
-			sweeponc(b,[2,1,0,3],1)
+			sweeponc(b,light_order[::-1],1)
 		time.sleep(1)
 
-def oncolours(b):
+def oncolours(b, light_order):
 	# set the colours to be used (max 8)
 	colours = [0,5000,10000,18000,24000,43000,51000,54000]
 
@@ -395,28 +394,28 @@ def oncolours(b):
 	alloff(b)
 
 	# turn on in a sweep and wait
-	for i in [3,0,1,2]:
+	for i in light_order:
 		b.lights(i+1,'state', on = True, hue = 24000, transitiontime = 8)
 		time.sleep(1)
 	time.sleep(1)
 
 	# turn off in a sweep and wait
-	for i in [3,0,1,2]:
+	for i in light_order:
 		b.lights(i+1,'state', on = False, transitiontime = 8)
 		time.sleep(1)
 
 	# loop through the colours blinking on and off
 	for n,c in enumerate(colours):
 		# on
-		for i in [3,0,1,2]:
+		for i in light_order:
 			b.lights(i+1,'state', on = True, hue = c, transitiontime = (8))
 		time.sleep(1)
 		# off
-		for i in [3,0,1,2]:
+		for i in light_order:
 			b.lights(i+1,'state', on = False, transitiontime = (8))
 		time.sleep(1)
 
-def oncolours2(b):
+def oncolours2(b, light_order):
 	# set the colours to be used (max 8)
 	colours = [0,5000,10000,18000,24000,43000,51000,54000]
 
@@ -426,11 +425,11 @@ def oncolours2(b):
 	# loop through the colours blinking on and off
 	for n,c in enumerate(colours):
 		# on
-		for i in [3,0,1,2]:
+		for i in light_order:
 			b.lights(i+1,'state', on = True, hue = c, transitiontime = (8))
 		time.sleep(0.5)
 		# off
-		for i in [3,0,1,2]:
+		for i in light_order:
 			b.lights(i+1,'state', on = False, transitiontime = (8))
 		time.sleep(0.5)
 
