@@ -1,4 +1,4 @@
-from qhue import Bridge
+from qhue import Bridge, create_new_username
 import time
 import numpy as np
 import lightfunctions as lf
@@ -32,20 +32,32 @@ def peakshow(b,order):
 
 	lf.sweepbackforth(b,60,True)
 
-if __name__ = "__main__":
+if __name__ == "__main__":
 
 	lights = [3,0,1,2]
 
-	b = Bridge('192.168.1.100', 'fGx1IUPbQu39QzOwdsAxRjl9tnLMYnySuu5PBCXZ')
+	bridge_IP = '192.168.1.100'
+	"""
+	username = None
+
+	if username is None:
+		username = create_new_username(bridge_IP)
+		print("New user: {} . Put this in the username variable above (line 41).".format(username))
+	"""
+	username = 'fGx1IUPbQu39QzOwdsAxRjl9tnLMYnySuu5PBCXZ'
+
+	b = Bridge(bridge_IP,username)
 
 	# initial slow loop for first 2.5hrs
+	# in units of seconds
+	part1_duration = 60
 
 	start = time.time()
-	while 60 > time.time() - start:
+	while part1_duration > time.time() - start:
 		print('Colour alternate')
 		lf.colouralternate(b,60,1)
 		print('Colour waves')
-		lf.colourwaves(b,[lights],60,30,30000)
+		lf.colourwaves(b,lights,60,30,30000)
 		print('part 1 continue')
 
 	print('part 2')
@@ -71,4 +83,3 @@ if __name__ = "__main__":
 		lf.colourwaves(b,lights,60,30,30000)
 		print('part 3 continue')
 
-		
