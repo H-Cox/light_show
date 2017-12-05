@@ -47,10 +47,10 @@ if __name__ == "__main__":
 	username = 'fGx1IUPbQu39QzOwdsAxRjl9tnLMYnySuu5PBCXZ'
 
 	b = Bridge(bridge_IP,username)
-
+	peakshow(b,lights)
 	# initial slow loop for first 2.5hrs
 	# in units of seconds
-	part1_duration = 60
+	part1_duration = 60*20
 
 	start = time.time()
 	while part1_duration > time.time() - start:
@@ -64,7 +64,7 @@ if __name__ == "__main__":
 	start = time.time()
 	while 60 > time.time() - start:	
 		start2 = time.time()
-		while 60 > time.time() - start2:
+		while 60*30 > time.time() - start2:
 			print('peak show')
 			peakshow(b,lights)
 		print('Colour alternate')
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 	
 	print('part 3')
 	start = time.time()
-	while 60 > time.time() - start:
+	while 60*60 > time.time() - start:
 		print('Colour alternate')
 		lf.colouralternate(b,60,1)
 		print('Colour waves')
