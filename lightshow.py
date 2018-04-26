@@ -37,16 +37,17 @@ if __name__ == "__main__":
 	lights = [3,0,1,2]
 
 	bridge_IP = '192.168.1.100'
-	"""
-	username = None
-
-	if username is None:
-		username = create_new_username(bridge_IP)
-		print("New user: {} . Put this in the username variable above (line 41).".format(username))
-	"""
 	username = 'fGx1IUPbQu39QzOwdsAxRjl9tnLMYnySuu5PBCXZ'
 
 	b = Bridge(bridge_IP,username)
+	#
+	lf.its_the_police(b,40,True)
+	lf.on_off_party(b)
+	#peakshow(b,lights)
+	lf.its_christmas(b,3000,4)
+	
+	"""
+
 	peakshow(b,lights)
 	# initial slow loop for first 2.5hrs
 	# in units of seconds
@@ -82,4 +83,7 @@ if __name__ == "__main__":
 		print('Colour waves')
 		lf.colourwaves(b,lights,60,30,30000)
 		print('part 3 continue')
+	"""
+		
+
 

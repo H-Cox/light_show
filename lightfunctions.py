@@ -471,10 +471,126 @@ def colourwaves(b,lights,duration,period,huespace):
 		hueset[hueset > 63000] = hueset[hueset > 63000] - 63000
 		time.sleep(0.5)
 
-		
-		
+def its_christmas(b,duration,wait):
+	# hue values to use
+	colours = [0,0,0,24000,24000,30000]
 
+	# number of lights
+	n = len(b.lights())
+	
+	# set transition time
+	tt = 8
 
+	# set min and max brightnesses
+	maxbri = 200
+	minbri = 100
+
+	# turn all lights on and set max saturation and brightness
+	for i in range(n):
+		b.lights(i+1,'state', on = True, hue = goodcolour(), bri = maxbri, sat = 255)
+
+	# turn on timer and loop until time is up
+	start = time.time()
+	while duration > time.time()-start:
+		# randomly pick a higher brightness
+		if np.random.randint(1,30) == 9:
+			maxbri2 = 255
+		else:
+			maxbri2 = maxbri
+		time.sleep(wait)
+		for i in np.random.permutation(range(n)):
+			# change settings of each light to a random colour
+			b.lights(i+1,'state',hue = colours[np.random.randint(0,len(colours))],bri = np.random.randint(minbri,maxbri2), transitiontime = tt)
+			time.sleep(0.1)
+		
+def on_off_party(b):
+	sequential = True
+	duration = 600
+	n = len(b.lights())
+	tt = 1
+	lights = list(range(n))
+	for i in range(n):
+		b.lights(i+1,'state', on = False)
+
+	# randomise order
+	li = np.random.permutation(range(n))
+
+	on_light = 0
+	off_light = n-1
+
+	start = time.time()
+	while duration > time.time() - start:
+
+		# turn off group 2
+		b.lights(off_light+1,'state', on = False, transitiontime = tt)
+		# turn on group 1 and select random colour
+		c = goodcolour()
+		b.lights(on_light+1,'state', on = True, hue = c, bri = 255, sat = 255, transitiontime = tt)
+		if sequential:
+			if on_light == 3:
+				on_light = 0
+			else:
+				on_light = on_light + 1
+
+			if off_light == 3:
+				off_light = 0
+			else:
+				off_light = off_light + 1
+		else:
+			off_light = on_light
+			li = np.random.permutation(range(n))
+			on_light = li[0]
+
+		time.sleep(1)
+
+def its_the_police(b,duration,onoff):
+	# duration is overall running time of script
+	# wait is time each pair spends on or off
+	colours = [0,45000]
+	c = 1
+
+	# find number of lights and set transition time
+	n = len(b.lights())
+	tt = 1
+
+	for i in range(n):
+		b.lights(i+1,'state', on = True, bri = 255, sat = 255)
+
+	# randomise order
+	li = np.random.permutation(range(n))
+
+	# calculate half or round down to half
+	split = int(n/2)
+
+	# determine two groups of lights
+	g1 = li[:split]
+	g2 = li[split:]
+	g = [g1,g2]
+	grp = 0
+	# initiate loop until time is up
+	start = time.time()
+	while duration > time.time() - start:
+
+		# switch on or off depending on state
+		if onoff:
+			# turn off group 2
+			for i in g[grp]:
+				b.lights(i+1,'state', on = False, transitiontime = tt)
+			# turn on group 1 and select random colour
+			c = colours[grp]
+			for i in g[abs(grp-1)]:
+				b.lights(i+1,'state', on = True, hue = c, bri = 255, sat = 255, transitiontime = tt)
+
+		else:
+			for i in g[grp]:
+				b.lights(i+1,'state',hue = colours[0], transitiontime = tt)
+			for i in g[abs(grp-1)]:
+				b.lights(i+1,'state',hue = colours[1], transitiontime = tt)
+		
+		grp = abs(grp-1)
+
+		# wait
+		time.sleep(0.5)
 
 
 
